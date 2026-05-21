@@ -1,6 +1,3 @@
-# Table of contents
-# Learn more at https://jupyterbook.org/customize/toc.html
-
 format: jb-book
 root: intro
 parts:
@@ -21,6 +18,8 @@ parts:
         title: "Perhitungan Determinan (Ekspansi Baris)"
       - file: matrix_invers
         title: "Invers Matriks & Metode Adjoint"
+      - file: faktorisasi_matriks_gram_schmidt
+        title: "Faktorisasi Matriks (Gram-Schmidt)"
 
   - caption: Transformasi Geometri
     chapters:
