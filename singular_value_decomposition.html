@@ -1,0 +1,759 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Singular Value Decomposition (SVD) &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'singular_value_decomposition';</script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Matriks Transformasi Linear" href="matriks_transformasi.html" />
+    <link rel="prev" title="Faktorisasi Matriks: Proses Gram-Schmidt (Matriks 4x4)" href="faktorisasi_matriks_gram_schmidt.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.jpg" class="logo__image only-light" alt="My sample book - Home"/>
+    <img src="_static/logo.jpg" class="logo__image only-dark pst-js-only" alt="My sample book - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Modul Interaktif: Aljabar Linear & Sistem Persamaan Linear
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Sistem Persamaan Linier</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="sistem_persamaan_linier.html">Konsep Dasar SPL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eliminasi_gaussian.html">Eliminasi Gaussian (SageMath)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geometri_spl.html">Geometri Sistem Persamaan Linear</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Matriks dan Determinan</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="operasi_baris_elementer.html">OBE &amp; Implementasi Komputasi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix_determinan.html">Perhitungan Determinan (Ekspansi Baris)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matrix_invers.html">Invers Matriks &amp; Metode Adjoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faktorisasi_matriks_gram_schmidt.html">Faktorisasi Matriks (Gram-Schmidt)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Singular Value Decomposition (SVD)</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformasi Geometri</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="matriks_transformasi.html">Matriks Transformasi &amp; Visualisasi</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fsingular_value_decomposition.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/singular_value_decomposition.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Singular Value Decomposition (SVD)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definisi-matematis">Definisi Matematis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algoritma-perhitungan-svd">Algoritma Perhitungan SVD</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-vektor-singular-kiri">Langkah 1: Menghitung Vektor Singular Kiri</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-membentuk-matriks-u">Langkah 2: Membentuk Matriks <span class="math notranslate nohighlight">\(U\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-nilai-singular-matriks-sigma">Langkah 3: Menghitung Nilai Singular &amp; Matriks <span class="math notranslate nohighlight">\(\Sigma\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-membentuk-matriks-v-dan-v-t">Langkah 4: Membentuk Matriks <span class="math notranslate nohighlight">\(V\)</span> dan <span class="math notranslate nohighlight">\(V^T\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-perhitungan-manual">Contoh Perhitungan Manual</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-aa-t">1. Menghitung <span class="math notranslate nohighlight">\(AA^T\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mencari-nilai-eigen-dari-aa-t">2. Mencari Nilai Eigen dari <span class="math notranslate nohighlight">\(AA^T\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-matriks-u">3. Menentukan Matriks <span class="math notranslate nohighlight">\(U\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-matriks-sigma">4. Menentukan Matriks <span class="math notranslate nohighlight">\(\Sigma\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-matriks-v">5. Menentukan Matriks <span class="math notranslate nohighlight">\(V\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrasi-kode-interaktif-sagemath-python">Integrasi Kode Interaktif (SageMath / Python)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="singular-value-decomposition-svd">
+<h1>Singular Value Decomposition (SVD)<a class="headerlink" href="#singular-value-decomposition-svd" title="Link to this heading">#</a></h1>
+<p>Singular Value Decomposition (SVD) adalah teknik faktorisasi matriks yang menguraikan sebuah matriks menjadi tiga matriks komponen utama. Teknik ini sangat krusial dalam mengungkapkan aspek struktural penting dari sebuah matriks dan banyak diaplikasikan dalam pemrosesan sinyal, kompresi gambar, sistem rekomendasi, serta reduksi dimensi pada <em>machine learning</em>.</p>
+<blockquote>
+<div><p><strong>Prasyarat:</strong> Sebelum mempelajari SVD, Anda diharapkan telah memahami konsep dasar aljabar linear seperti norma vektor/matriks, rank matriks, dekomposisi eigen (vektor eigen dan nilai eigen), vektor ortonormal, serta proyeksi linear.</p>
+</div></blockquote>
+<hr class="docutils" />
+<section id="definisi-matematis">
+<h2>Definisi Matematis<a class="headerlink" href="#definisi-matematis" title="Link to this heading">#</a></h2>
+<p>Dekomposisi nilai singular dari sebuah matriks riil <span class="math notranslate nohighlight">\(A\)</span> berukuran <span class="math notranslate nohighlight">\(m \times n\)</span> adalah faktorisasi dalam bentuk:</p>
+<div class="math notranslate nohighlight">
+\[
+A = U\Sigma V^T
+\]</div>
+<p>Dimana setiap matriks memiliki karakteristik berikut:</p>
+<ul class="simple">
+<li><p><strong><span class="math notranslate nohighlight">\(U\)</span> (Matriks Ortogonal <span class="math notranslate nohighlight">\(m \times m\)</span>):</strong> Kolom-kolomnya merupakan vektor-vektor ortonormal yang disebut sebagai <strong>vektor singular kiri</strong> dari <span class="math notranslate nohighlight">\(A\)</span>. Vektor-vektor ini merupakan vektor eigen dari matriks simetris <span class="math notranslate nohighlight">\(AA^T\)</span>.</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(\Sigma\)</span> (Matriks Diagonal Persegi Panjang <span class="math notranslate nohighlight">\(m \times n\)</span>):</strong> Berisi bilangan riil non-negatif pada diagonal utamanya yang disusun secara berurutan menurun:
+$<span class="math notranslate nohighlight">\(
+  \sigma_1 \ge \sigma_2 \ge \cdots \ge \sigma_r &gt; 0
+  \)</span><span class="math notranslate nohighlight">\(
+  Entri diagonal ini disebut **nilai singular** dari \)</span>A<span class="math notranslate nohighlight">\(. Banyaknya nilai singular yang tidak nol menunjukkan nilai *rank* dari matriks \)</span>A$.</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(V\)</span> (Matriks Ortogonal <span class="math notranslate nohighlight">\(n \times n\)</span>):</strong> Kolom-kolomnya merupakan vektor-vektor ortonormal yang disebut <strong>vektor singular kanan</strong> dari <span class="math notranslate nohighlight">\(A\)</span>, yang diperoleh dari vektor eigen matriks simetris <span class="math notranslate nohighlight">\(A^TA\)</span>. Matriks <span class="math notranslate nohighlight">\(V^T\)</span> adalah bentuk <em>transpose</em> dari <span class="math notranslate nohighlight">\(V\)</span>.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="algoritma-perhitungan-svd">
+<h2>Algoritma Perhitungan SVD<a class="headerlink" href="#algoritma-perhitungan-svd" title="Link to this heading">#</a></h2>
+<p>Prosedur lengkap untuk mendekomposisi matriks <span class="math notranslate nohighlight">\(A\)</span> secara manual adalah sebagai berikut:</p>
+<section id="langkah-1-menghitung-vektor-singular-kiri">
+<h3>Langkah 1: Menghitung Vektor Singular Kiri<a class="headerlink" href="#langkah-1-menghitung-vektor-singular-kiri" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Hitung matriks simetris <span class="math notranslate nohighlight">\(AA^T\)</span> (berukuran <span class="math notranslate nohighlight">\(m \times m\)</span>).</p></li>
+<li><p>Cari nilai-nilai eigen (<span class="math notranslate nohighlight">\(\lambda\)</span>) dari matriks <span class="math notranslate nohighlight">\(AA^T\)</span> dengan menyelesaikan persamaan karakteristik <span class="math notranslate nohighlight">\(\det(AA^T - \lambda I) = 0\)</span>.</p></li>
+<li><p>Banyaknya nilai eigen yang tidak nol menentukan nilai <span class="math notranslate nohighlight">\(\operatorname{Rank}(A) = k\)</span>.</p></li>
+</ol>
+</section>
+<section id="langkah-2-membentuk-matriks-u">
+<h3>Langkah 2: Membentuk Matriks <span class="math notranslate nohighlight">\(U\)</span><a class="headerlink" href="#langkah-2-membentuk-matriks-u" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Tentukan vektor eigen <span class="math notranslate nohighlight">\(\mathbf{u}_1, \mathbf{u}_2, \ldots, \mathbf{u}_m\)</span> yang berkorespondensi dengan masing-masing nilai eigen dari <span class="math notranslate nohighlight">\(AA^T\)</span>.</p></li>
+<li><p>Normalisasi setiap vektor eigen tersebut agar panjangnya bernilai <span class="math notranslate nohighlight">\(1\)</span> (ortonormal):
+$<span class="math notranslate nohighlight">\(
+ \mathbf{u}_i = \frac{\mathbf{u}_i}{\|\mathbf{u}_i\|}
+ \)</span>$</p></li>
+<li><p>Susun vektor-vektor ortonormal ini sebagai kolom-kolom untuk membentuk matriks <span class="math notranslate nohighlight">\(U\)</span>.</p></li>
+</ol>
+</section>
+<section id="langkah-3-menghitung-nilai-singular-matriks-sigma">
+<h3>Langkah 3: Menghitung Nilai Singular &amp; Matriks <span class="math notranslate nohighlight">\(\Sigma\)</span><a class="headerlink" href="#langkah-3-menghitung-nilai-singular-matriks-sigma" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Urutkan nilai eigen dari yang terbesar ke terkecil.</p></li>
+<li><p>Nilai singular (<span class="math notranslate nohighlight">\(\sigma_i\)</span>) diperoleh dari akar kuadrat nilai eigen utama tersebut:
+$<span class="math notranslate nohighlight">\(
+ \sigma_i = \sqrt{\lambda_i}
+ \)</span>$</p></li>
+<li><p>Bentuk matriks <span class="math notranslate nohighlight">\(\Sigma\)</span> berukuran <span class="math notranslate nohighlight">\(m \times n\)</span> dengan menempatkan nilai singular pada diagonal utama dan mengisi entri lainnya dengan angka <span class="math notranslate nohighlight">\(0\)</span>.</p></li>
+</ol>
+</section>
+<section id="langkah-4-membentuk-matriks-v-dan-v-t">
+<h3>Langkah 4: Membentuk Matriks <span class="math notranslate nohighlight">\(V\)</span> dan <span class="math notranslate nohighlight">\(V^T\)</span><a class="headerlink" href="#langkah-4-membentuk-matriks-v-dan-v-t" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Hitung matriks simetris <span class="math notranslate nohighlight">\(A^TA\)</span> (berukuran <span class="math notranslate nohighlight">\(n \times n\)</span>).</p></li>
+<li><p>Tentukan vektor eigen <span class="math notranslate nohighlight">\(\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_n\)</span> dari <span class="math notranslate nohighlight">\(A^TA\)</span>.</p></li>
+<li><p>Normalisasi setiap vektor eigen tersebut:
+$<span class="math notranslate nohighlight">\(
+ \mathbf{v}_i = \frac{\mathbf{v}_i}{\|\mathbf{v}_i\|}
+ \)</span>$</p></li>
+<li><p>Susun vektor-vektor ini sebagai kolom-kolom matriks <span class="math notranslate nohighlight">\(V\)</span>, kemudian lakukan <em>transpose</em> untuk memperoleh matriks <span class="math notranslate nohighlight">\(V^T\)</span>.</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="contoh-perhitungan-manual">
+<h2>Contoh Perhitungan Manual<a class="headerlink" href="#contoh-perhitungan-manual" title="Link to this heading">#</a></h2>
+<p>Diberikan matriks <span class="math notranslate nohighlight">\(A\)</span> berukuran <span class="math notranslate nohighlight">\(2 \times 3\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+A = \begin{bmatrix} 3 &amp; 1 &amp; 1 \\ -1 &amp; 3 &amp; 1 \end{bmatrix}
+\end{split}\]</div>
+<section id="menghitung-aa-t">
+<h3>1. Menghitung <span class="math notranslate nohighlight">\(AA^T\)</span><a class="headerlink" href="#menghitung-aa-t" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+AA^T = \begin{bmatrix} 3 &amp; 1 &amp; 1 \\ -1 &amp; 3 &amp; 1 \end{bmatrix} \begin{bmatrix} 3 &amp; -1 \\ 1 &amp; 3 \\ 1 &amp; 1 \end{bmatrix} = \begin{bmatrix} 11 &amp; 1 \\ 1 &amp; 11 \end{bmatrix}
+\end{split}\]</div>
+</section>
+<section id="mencari-nilai-eigen-dari-aa-t">
+<h3>2. Mencari Nilai Eigen dari <span class="math notranslate nohighlight">\(AA^T\)</span><a class="headerlink" href="#mencari-nilai-eigen-dari-aa-t" title="Link to this heading">#</a></h3>
+<p>Persamaan karakteristik:
+$<span class="math notranslate nohighlight">\(
+\det(AA^T - \lambda I) = 0
+\)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+\det \begin{bmatrix} 11-\lambda &amp; 1 \\ 1 &amp; 11-\lambda \end{bmatrix} = 0
+\)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+(11-\lambda)^2 - 1 = 0 \implies \lambda^2 - 22\lambda + 120 = 0
+\)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\(
+(\lambda - 12)(\lambda - 10) = 0
+\)</span><span class="math notranslate nohighlight">\(
+Didapatkan nilai eigen: \)</span>\lambda_1 = 12<span class="math notranslate nohighlight">\( dan \)</span>\lambda_2 = 10<span class="math notranslate nohighlight">\(. Karena kedua nilai eigen tidak nol, maka \)</span>\operatorname{Rank}(A) = 2$.</p>
+</section>
+<section id="menentukan-matriks-u">
+<h3>3. Menentukan Matriks <span class="math notranslate nohighlight">\(U\)</span><a class="headerlink" href="#menentukan-matriks-u" title="Link to this heading">#</a></h3>
+<p>Selesaikan sistem persamaan <span class="math notranslate nohighlight">\((\lambda I - AA^T)\mathbf{x} = 0\)</span>:</p>
+<ul class="simple">
+<li><p><strong>Untuk <span class="math notranslate nohighlight">\(\lambda_1 = 12\)</span>:</strong>
+$<span class="math notranslate nohighlight">\(
+  \begin{bmatrix} 1 &amp; -1 \\ -1 &amp; 1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \implies x_1 = x_2 \implies \mathbf{u}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}
+  \)</span><span class="math notranslate nohighlight">\(
+  Normalisasi (\)</span>|\mathbf{u}_1| = \sqrt{2}<span class="math notranslate nohighlight">\():
+  \)</span><span class="math notranslate nohighlight">\(
+  \hat{\mathbf{u}}_1 = \begin{bmatrix} \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} \end{bmatrix}
+  \)</span>$</p></li>
+<li><p><strong>Untuk <span class="math notranslate nohighlight">\(\lambda_2 = 10\)</span>:</strong>
+$<span class="math notranslate nohighlight">\(
+  \begin{bmatrix} -1 &amp; -1 \\ -1 &amp; -1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \implies x_1 = -x_2 \implies \mathbf{u}_2 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}
+  \)</span><span class="math notranslate nohighlight">\(
+  Normalisasi (\)</span>|\mathbf{u}_2| = \sqrt{2}<span class="math notranslate nohighlight">\():
+  \)</span><span class="math notranslate nohighlight">\(
+  \hat{\mathbf{u}}_2 = \begin{bmatrix} \frac{1}{\sqrt{2}} \\ -\frac{1}{\sqrt{2}} \end{bmatrix}
+  \)</span>$</p></li>
+</ul>
+<p>Maka, diperoleh matriks <span class="math notranslate nohighlight">\(U\)</span>:
+$<span class="math notranslate nohighlight">\(
+U = \begin{bmatrix} \frac{1}{\sqrt{2}} &amp; \frac{1}{\sqrt{2}} \\ \frac{1}{\sqrt{2}} &amp; -\frac{1}{\sqrt{2}} \end{bmatrix}
+\)</span>$</p>
+</section>
+<section id="menentukan-matriks-sigma">
+<h3>4. Menentukan Matriks <span class="math notranslate nohighlight">\(\Sigma\)</span><a class="headerlink" href="#menentukan-matriks-sigma" title="Link to this heading">#</a></h3>
+<p>Nilai singular didapatkan dari akar nilai eigen:
+$<span class="math notranslate nohighlight">\(
+\sigma_1 = \sqrt{12} = 2\sqrt{3}, \quad \sigma_2 = \sqrt{10}
+\)</span><span class="math notranslate nohighlight">\(
+Matriks \)</span>\Sigma<span class="math notranslate nohighlight">\( berukuran \)</span>2 \times 3<span class="math notranslate nohighlight">\( dibentuk sebagai berikut:
+\)</span><span class="math notranslate nohighlight">\(
+\Sigma = \begin{bmatrix} 2\sqrt{3} &amp; 0 &amp; 0 \\ 0 &amp; \sqrt{10} &amp; 0 \end{bmatrix}
+\)</span>$</p>
+</section>
+<section id="menentukan-matriks-v">
+<h3>5. Menentukan Matriks <span class="math notranslate nohighlight">\(V\)</span><a class="headerlink" href="#menentukan-matriks-v" title="Link to this heading">#</a></h3>
+<p>Hitung terlebih dahulu matriks <span class="math notranslate nohighlight">\(A^TA\)</span>:
+$<span class="math notranslate nohighlight">\(
+A^TA = \begin{bmatrix} 3 &amp; -1 \\ 1 &amp; 3 \\ 1 &amp; 1 \end{bmatrix} \begin{bmatrix} 3 &amp; 1 &amp; 1 \\ -1 &amp; 3 &amp; 1 \end{bmatrix} = \begin{bmatrix} 10 &amp; 0 &amp; 2 \\ 0 &amp; 10 &amp; 4 \\ 2 &amp; 4 &amp; 2 \end{bmatrix}
+\)</span>$</p>
+<p>Cari vektor eigen melalui persamaan <span class="math notranslate nohighlight">\((A^TA - \lambda I)\mathbf{v} = 0\)</span>:</p>
+<ul class="simple">
+<li><p><strong>Untuk <span class="math notranslate nohighlight">\(\lambda_1 = 12\)</span>:</strong> diperoleh <span class="math notranslate nohighlight">\(\mathbf{v}_1 = [1, 2, 1]^T\)</span>, ternormalisasi menjadi:
+$<span class="math notranslate nohighlight">\(
+  \hat{\mathbf{v}}_1 = \frac{1}{\sqrt{6}}\begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix}
+  \)</span>$</p></li>
+<li><p><strong>Untuk <span class="math notranslate nohighlight">\(\lambda_2 = 10\)</span>:</strong> diperoleh <span class="math notranslate nohighlight">\(\mathbf{v}_2 = [2, -1, 0]^T\)</span>, ternormalisasi menjadi:
+$<span class="math notranslate nohighlight">\(
+  \hat{\mathbf{v}}_2 = \frac{1}{\sqrt{5}}\begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix}
+  \)</span>$</p></li>
+<li><p><strong>Untuk <span class="math notranslate nohighlight">\(\lambda_3 = 0\)</span>:</strong> diperoleh <span class="math notranslate nohighlight">\(\mathbf{v}_3 = [1, 2, -5]^T\)</span>, ternormalisasi menjadi:
+$<span class="math notranslate nohighlight">\(
+  \hat{\mathbf{v}}_3 = \frac{1}{\sqrt{30}}\begin{bmatrix} 1 \\ 2 \\ -5 \end{bmatrix}
+  \)</span>$</p></li>
+</ul>
+<p>Menyusun matriks <span class="math notranslate nohighlight">\(V\)</span> dan <span class="math notranslate nohighlight">\(V^T\)</span>:
+$<span class="math notranslate nohighlight">\(
+V = \begin{bmatrix} \frac{1}{\sqrt{6}} &amp; \frac{2}{\sqrt{5}} &amp; \frac{1}{\sqrt{30}} \\ \frac{2}{\sqrt{6}} &amp; -\frac{1}{\sqrt{5}} &amp; \frac{2}{\sqrt{30}} \\ \frac{1}{\sqrt{6}} &amp; 0 &amp; -\frac{5}{\sqrt{30}} \end{bmatrix} \implies V^T = \begin{bmatrix} \frac{1}{\sqrt{6}} &amp; \frac{2}{\sqrt{6}} &amp; \frac{1}{\sqrt{6}} \\ \frac{2}{\sqrt{5}} &amp; -\frac{1}{\sqrt{5}} &amp; 0 \\ \frac{1}{\sqrt{30}} &amp; \frac{2}{\sqrt{30}} &amp; -\frac{5}{\sqrt{30}} \end{bmatrix}
+\)</span>$</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="integrasi-kode-interaktif-sagemath-python">
+<h2>Integrasi Kode Interaktif (SageMath / Python)<a class="headerlink" href="#integrasi-kode-interaktif-sagemath-python" title="Link to this heading">#</a></h2>
+<p>Gunakan blok kode interaktif di bawah ini pada halaman web Anda untuk mendemonstrasikan penghitungan otomatis menggunakan pustaka NumPy:</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;[https://sagecell.sagemath.org/static/embedded_sagecell.js](https://sagecell.sagemath.org/static/embedded_sagecell.js)&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="nx">sagecell</span><span class="p">.</span><span class="nx">makeSagecell</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">inputLocation</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;.sage&#39;</span>
+<span class="p">});</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;sage&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/x-sage&quot;</span><span class="p">&gt;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">numpy</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">np</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">Inisialisasi</span><span class="w"> </span><span class="nx">Matriks</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">awal</span>
+<span class="nx">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">np</span><span class="p">.</span><span class="nx">array</span><span class="p">([[</span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">]])</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">Proses</span><span class="w"> </span><span class="nx">Komputasi</span><span class="w"> </span><span class="nx">SVD</span>
+<span class="nx">U</span><span class="p">,</span><span class="w"> </span><span class="nx">S_vektor</span><span class="p">,</span><span class="w"> </span><span class="nx">VT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">np</span><span class="p">.</span><span class="nx">linalg</span><span class="p">.</span><span class="nx">svd</span><span class="p">(</span><span class="nx">A</span><span class="p">)</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">Membuat</span><span class="w"> </span><span class="nx">matriks</span><span class="w"> </span><span class="nx">diagonal</span><span class="w"> </span><span class="nx">Sigma</span><span class="w"> </span><span class="nx">berukuran</span><span class="w"> </span><span class="mf">2</span><span class="nx">x3</span>
+<span class="nx">Sigma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">np</span><span class="p">.</span><span class="nx">zeros</span><span class="p">((</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">))</span>
+<span class="nx">Sigma</span><span class="p">[</span><span class="o">:</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="mf">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">np</span><span class="p">.</span><span class="nx">diag</span><span class="p">(</span><span class="nx">S_vektor</span><span class="p">)</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">Rekonstruksi</span><span class="w"> </span><span class="nx">kembali</span><span class="w"> </span><span class="nx">matriks</span><span class="w"> </span><span class="nx">A</span>
+<span class="nx">A_reconstructed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">U</span><span class="w"> </span><span class="err">@</span><span class="w"> </span><span class="nx">Sigma</span><span class="w"> </span><span class="err">@</span><span class="w"> </span><span class="nx">VT</span>
+
+<span class="nx">print</span><span class="p">(</span><span class="s2">&quot;Matriks Ortogonal U (Vektor Singular Kiri):&quot;</span><span class="p">)</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">np</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">U</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">))</span>
+<span class="nx">print</span><span class="p">(</span><span class="s2">&quot;\nMatriks Diagonal Sigma (Nilai Singular):&quot;</span><span class="p">)</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">np</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">Sigma</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">))</span>
+<span class="nx">print</span><span class="p">(</span><span class="s2">&quot;\nMatriks V Transpose (V Vektor Singular Kanan):&quot;</span><span class="p">)</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">np</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">VT</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">))</span>
+<span class="nx">print</span><span class="p">(</span><span class="s2">&quot;\nHasil Rekonstruksi U @ Sigma @ VT:&quot;</span><span class="p">)</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">np</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">A_reconstructed</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">))</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="faktorisasi_matriks_gram_schmidt.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Faktorisasi Matriks: Proses Gram-Schmidt (Matriks 4x4)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="matriks_transformasi.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Matriks Transformasi Linear</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definisi-matematis">Definisi Matematis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algoritma-perhitungan-svd">Algoritma Perhitungan SVD</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-vektor-singular-kiri">Langkah 1: Menghitung Vektor Singular Kiri</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-membentuk-matriks-u">Langkah 2: Membentuk Matriks <span class="math notranslate nohighlight">\(U\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-nilai-singular-matriks-sigma">Langkah 3: Menghitung Nilai Singular &amp; Matriks <span class="math notranslate nohighlight">\(\Sigma\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-membentuk-matriks-v-dan-v-t">Langkah 4: Membentuk Matriks <span class="math notranslate nohighlight">\(V\)</span> dan <span class="math notranslate nohighlight">\(V^T\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-perhitungan-manual">Contoh Perhitungan Manual</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghitung-aa-t">1. Menghitung <span class="math notranslate nohighlight">\(AA^T\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mencari-nilai-eigen-dari-aa-t">2. Mencari Nilai Eigen dari <span class="math notranslate nohighlight">\(AA^T\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-matriks-u">3. Menentukan Matriks <span class="math notranslate nohighlight">\(U\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-matriks-sigma">4. Menentukan Matriks <span class="math notranslate nohighlight">\(\Sigma\)</span></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-matriks-v">5. Menentukan Matriks <span class="math notranslate nohighlight">\(V\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrasi-kode-interaktif-sagemath-python">Integrasi Kode Interaktif (SageMath / Python)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
