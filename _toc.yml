@@ -20,6 +20,8 @@ parts:
         title: "Invers Matriks & Metode Adjoint"
       - file: faktorisasi_matriks_gram_schmidt
         title: "Faktorisasi Matriks (Gram-Schmidt)"
+      - file: singular_value_decomposition
+        title: "Singular Value Decomposition (SVD)"
 
   - caption: Transformasi Geometri
     chapters:
