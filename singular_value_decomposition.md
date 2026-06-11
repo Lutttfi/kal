@@ -159,7 +159,7 @@ $$
 Gunakan blok kode interaktif di bawah ini pada halaman web Anda untuk mendemonstrasikan penghitungan otomatis menggunakan pustaka NumPy:
 
 ```html
-<script src="[https://sagecell.sagemath.org/static/embedded_sagecell.js](https://sagecell.sagemath.org/static/embedded_sagecell.js)"></script>
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
 <script>
 sagecell.makeSagecell({
     inputLocation: '.sage'
