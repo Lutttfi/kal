@@ -579,44 +579,40 @@ V = \begin{bmatrix} \frac{1}{\sqrt{6}} &amp; \frac{2}{\sqrt{5}} &amp; \frac{1}{\
 <hr class="docutils" />
 <section id="integrasi-kode-interaktif-sagemath-python">
 <h2>Integrasi Kode Interaktif (SageMath / Python)<a class="headerlink" href="#integrasi-kode-interaktif-sagemath-python" title="Link to this heading">#</a></h2>
-<p>Gunakan blok kode interaktif di bawah ini pada halaman web Anda untuk mendemonstrasikan penghitungan otomatis menggunakan pustaka NumPy:</p>
-<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://sagecell.sagemath.org/static/embedded_sagecell.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
-<span class="nx">sagecell</span><span class="p">.</span><span class="nx">makeSagecell</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">inputLocation</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;.sage&#39;</span>
-<span class="p">});</span>
-<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<script src="[https://sagecell.sagemath.org/static/embedded_sagecell.js](https://sagecell.sagemath.org/static/embedded_sagecell.js)"></script>
+<script>
+sagecell.makeSagecell({
+    inputLocation: '.sage'
+});
+</script>
 
-<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;sage&quot;</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/x-sage&quot;</span><span class="p">&gt;</span>
-<span class="k">import</span><span class="w"> </span><span class="nx">numpy</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">np</span>
+<div class="sage">
+<script type="text/x-sage">
+import numpy as np
 
-<span class="err">#</span><span class="w"> </span><span class="nx">Inisialisasi</span><span class="w"> </span><span class="nx">Matriks</span><span class="w"> </span><span class="nx">A</span><span class="w"> </span><span class="nx">awal</span>
-<span class="nx">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">np</span><span class="p">.</span><span class="nx">array</span><span class="p">([[</span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">]])</span>
+# Inisialisasi Matriks A awal
+A = np.array([[3, 1, 1], [-1, 3, 1]])
 
-<span class="err">#</span><span class="w"> </span><span class="nx">Proses</span><span class="w"> </span><span class="nx">Komputasi</span><span class="w"> </span><span class="nx">SVD</span>
-<span class="nx">U</span><span class="p">,</span><span class="w"> </span><span class="nx">S_vektor</span><span class="p">,</span><span class="w"> </span><span class="nx">VT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">np</span><span class="p">.</span><span class="nx">linalg</span><span class="p">.</span><span class="nx">svd</span><span class="p">(</span><span class="nx">A</span><span class="p">)</span>
+# Proses Komputasi SVD
+U, S_vektor, VT = np.linalg.svd(A)
 
-<span class="err">#</span><span class="w"> </span><span class="nx">Membuat</span><span class="w"> </span><span class="nx">matriks</span><span class="w"> </span><span class="nx">diagonal</span><span class="w"> </span><span class="nx">Sigma</span><span class="w"> </span><span class="nx">berukuran</span><span class="w"> </span><span class="mf">2</span><span class="nx">x3</span>
-<span class="nx">Sigma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">np</span><span class="p">.</span><span class="nx">zeros</span><span class="p">((</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3</span><span class="p">))</span>
-<span class="nx">Sigma</span><span class="p">[</span><span class="o">:</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="o">:</span><span class="mf">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">np</span><span class="p">.</span><span class="nx">diag</span><span class="p">(</span><span class="nx">S_vektor</span><span class="p">)</span>
+# Membuat matriks diagonal Sigma berukuran 2x3
+Sigma = np.zeros((2, 3))
+Sigma[:2, :2] = np.diag(S_vektor)
 
-<span class="err">#</span><span class="w"> </span><span class="nx">Rekonstruksi</span><span class="w"> </span><span class="nx">kembali</span><span class="w"> </span><span class="nx">matriks</span><span class="w"> </span><span class="nx">A</span>
-<span class="nx">A_reconstructed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">U</span><span class="w"> </span><span class="err">@</span><span class="w"> </span><span class="nx">Sigma</span><span class="w"> </span><span class="err">@</span><span class="w"> </span><span class="nx">VT</span>
+# Rekonstruksi kembali matriks A
+A_reconstructed = U @ Sigma @ VT
 
-<span class="nx">print</span><span class="p">(</span><span class="s2">&quot;Matriks Ortogonal U (Vektor Singular Kiri):&quot;</span><span class="p">)</span>
-<span class="nx">print</span><span class="p">(</span><span class="nx">np</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">U</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">))</span>
-<span class="nx">print</span><span class="p">(</span><span class="s2">&quot;\nMatriks Diagonal Sigma (Nilai Singular):&quot;</span><span class="p">)</span>
-<span class="nx">print</span><span class="p">(</span><span class="nx">np</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">Sigma</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">))</span>
-<span class="nx">print</span><span class="p">(</span><span class="s2">&quot;\nMatriks V Transpose (V Vektor Singular Kanan):&quot;</span><span class="p">)</span>
-<span class="nx">print</span><span class="p">(</span><span class="nx">np</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">VT</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">))</span>
-<span class="nx">print</span><span class="p">(</span><span class="s2">&quot;\nHasil Rekonstruksi U @ Sigma @ VT:&quot;</span><span class="p">)</span>
-<span class="nx">print</span><span class="p">(</span><span class="nx">np</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">A_reconstructed</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">))</span>
-<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</pre></div>
-</div>
-</section>
+print("Matriks Ortogonal U (Vektor Singular Kiri):")
+print(np.round(U, 4))
+print("\nMatriks Diagonal Sigma (Nilai Singular):")
+print(np.round(Sigma, 4))
+print("\nMatriks V Transpose (V Vektor Singular Kanan):")
+print(np.round(VT, 4))
+print("\nHasil Rekonstruksi U @ Sigma @ VT:")
+print(np.round(A_reconstructed, 4))
+</script>
+</div></section>
 </section>
 
     <script type="text/x-thebe-config">
