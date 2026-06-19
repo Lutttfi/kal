@@ -29,3 +29,8 @@ parts:
         title: "Matriks Transformasi & Visualisasi"
       - file: animasi_refleksi
         title: "Animasi Refleksi Interaktif"
+
+  - caption: Tugas Akhir
+    chapters:
+      - file: tugas_akhir
+        title: "Tugas Akhir"
